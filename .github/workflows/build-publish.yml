@@ -13,6 +13,5 @@ jobs:
   build:
     uses: conbt-jp/github-actions-templates/.github/workflows/angular-build-publish.yml@main
     with:
-      app-directory: angular-web
       package-name: angular-web
       node-version: "24"
