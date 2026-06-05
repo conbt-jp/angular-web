@@ -25,8 +25,9 @@ jobs:
           registry-url: https://npm.pkg.github.com
 
       - name: Install dependencies
-        run: npm ci
-
+        run: | 
+          cd angular-web
+          npm ci
       - name: Build Angular
         run: npm run build -- --configuration production
 
