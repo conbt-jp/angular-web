@@ -9,7 +9,6 @@
     "test": "ng test",
     "serve:ssr:angular-web": "node dist/angular-web/server/server.mjs"
   },
-  "private": true,
   "packageManager": "npm@11.13.0",
   "dependencies": {
     "@angular/common": "^22.0.0",
