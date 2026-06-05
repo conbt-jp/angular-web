@@ -1,0 +1,96 @@
+name: Deploy latest package to local Nginx
+
+on:
+  workflow_dispatch:
+    inputs:
+      package-version:
+        description: "Package version, example: 2.0.8. Leave latest for latest version."
+        required: false
+        default: "latest"
+
+permissions:
+  contents: read
+  packages: read
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    env:
+      PACKAGE_NAME: "@conbt-jp/angular-web"
+      DEPLOY_DIR: "C:\\nginx-html"
+
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          registry-url: https://npm.pkg.github.com
+
+      - name: Configure npm auth
+        shell: powershell
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          "@conbt-jp:registry=https://npm.pkg.github.com" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii
+          "//npm.pkg.github.com/:_authToken=$env:NODE_AUTH_TOKEN" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii -Append
+
+      - name: Download package
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          if ("${{ github.event.inputs.package-version }}" -eq "latest") {
+            $target = "$env:PACKAGE_NAME@latest"
+          } else {
+            $target = "$env:PACKAGE_NAME@${{ github.event.inputs.package-version }}"
+          }
+
+          Write-Host "Downloading package: $target"
+
+          Remove-Item deploy_tmp -Recurse -Force -ErrorAction SilentlyContinue
+          New-Item -ItemType Directory -Force -Path deploy_tmp | Out-Null
+
+          Set-Location deploy_tmp
+          npm pack $target --registry=https://npm.pkg.github.com
+
+      - name: Extract package
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          Set-Location deploy_tmp
+          $tgz = Get-ChildItem *.tgz | Select-Object -First 1
+
+          Write-Host "Extracting: $($tgz.Name)"
+          tar -xzf $tgz.Name
+
+      - name: Deploy to Nginx folder
+        shell: powershell
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $source1 = "deploy_tmp\package\angular-web\browser"
+          $source2 = "deploy_tmp\package\browser"
+
+          if (Test-Path $source1) {
+            $source = $source1
+          } elseif (Test-Path $source2) {
+            $source = $source2
+          } else {
+            Write-Host "Cannot find Angular browser output"
+            Get-ChildItem deploy_tmp\package -Recurse
+            exit 1
+          }
+
+          Write-Host "Deploy source: $source"
+          Write-Host "Deploy target: $env:DEPLOY_DIR"
+
+          Remove-Item "$env:DEPLOY_DIR\*" -Recurse -Force -ErrorAction SilentlyContinue
+          Copy-Item "$source\*" $env:DEPLOY_DIR -Recurse -Force
+
+      - name: Reload Nginx
+        shell: powershell
+        run: |
+          nginx -s reload
+          Write-Host "Deploy completed. Open http://localhost:8080"
