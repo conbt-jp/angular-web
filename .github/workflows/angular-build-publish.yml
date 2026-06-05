@@ -26,8 +26,8 @@ jobs:
 
       - name: Install dependencies
         run: | 
- 	  cd angular-web
- 	  npm ci
+          cd angular-web
+          npm ci
       - name: Build Angular
         run: npm run build -- --configuration production
 
