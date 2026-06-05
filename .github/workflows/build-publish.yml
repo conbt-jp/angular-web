@@ -15,4 +15,4 @@ jobs:
     with:
       app-directory: angular-web
       package-name: angular-web
-      node-version: "24"
+      node-version: "22"
