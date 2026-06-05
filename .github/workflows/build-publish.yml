@@ -17,7 +17,7 @@ jobs:
       - run: |
           echo "CALLER WORKFLOW"
           echo "Repository: ${{ github.repository }}"
-          echo "Branch: ${{ github.ref_name }}"
+          echo "Branch : ${{ github.ref_name }}"
 
   build:
     uses: conbt-jp/github-actions-templates/.github/workflows/angular-build-publish.yml@main
