@@ -30,7 +30,7 @@ jobs:
       - name: Configure npm auth
         shell: powershell
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN 
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
         run: |
           "@conbt-jp:registry=https://npm.pkg.github.com" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii
           "//npm.pkg.github.com/:_authToken=$env:NODE_AUTH_TOKEN" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii -Append
