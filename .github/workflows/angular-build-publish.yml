@@ -10,6 +10,10 @@ permissions:
   contents: read
   packages: write
 
+defaults:
+  run:
+    working-directory: angular-web
+
 jobs:
   build-and-publish:
     runs-on: ubuntu-latest
@@ -26,7 +30,6 @@ jobs:
 
       - name: Install dependencies
         run: | 
-          cd angular-web
           npm ci
       - name: Build Angular
         run: npm run build -- --configuration production
