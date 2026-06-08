@@ -34,6 +34,17 @@ jobs:
         run: |
           "@conbt-jp:registry=https://npm.pkg.github.com" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii
           "//npm.pkg.github.com/:_authToken=$env:NODE_AUTH_TOKEN" | Out-File -FilePath "$HOME\.npmrc" -Encoding ascii -Append
+      - name: Test npm auth
+        shell: powershell
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+        run: |
+          Remove-Item "$HOME\.npmrc" -Force -ErrorAction SilentlyContinue
+          "@conbt-jp:registry=https://npm.pkg.github.com/" | Set-Content "$HOME\.npmrc" -Encoding ascii
+          "//npm.pkg.github.com/:_authToken=$env:NODE_AUTH_TOKEN" | Add-Content "$HOME\.npmrc" -Encoding ascii
+
+          npm whoami --registry=https://npm.pkg.github.com/
+          npm view @conbt-jp/angular-web --registry=https://npm.pkg.github.com/
 
       - name: Download package
         shell: powershell
