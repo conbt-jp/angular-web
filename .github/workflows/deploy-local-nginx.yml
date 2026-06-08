@@ -19,7 +19,7 @@ jobs:
     env:
       PACKAGE_NAME: "@conbt-jp/angular-web"
       DEPLOY_DIR: "C:\\nginx-html"
-      NGINX_EXE: "C:\\Users\\admin\\Downloads\\nginx-1.31.1\\nginx-1.31.1\\nginx.exe"
+      NGINX_DIR: "C:\\Users\\admin\\Downloads\\nginx-1.31.1\\nginx-1.31.1"
 
     steps:
       - name: Setup Node.js
