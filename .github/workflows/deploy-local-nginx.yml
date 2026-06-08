@@ -107,3 +107,19 @@ jobs:
           Set-Location $env:NGINX_DIR
           .\nginx.exe -s reload
           Write-Host "Deploy completed. Open http://localhost:8080"
+
+      - name: Notify Teams
+        if: always()
+        shell: powershell
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        run: |
+          $payload = @{
+            text = "Deploy Angular completed. Status: ${{ job.status }}"
+          } | ConvertTo-Json
+
+          Invoke-RestMethod `
+            -Uri $env:TEAMS_WEBHOOK_URL `
+            -Method Post `
+            -ContentType "application/json" `
+            -Body $payload
