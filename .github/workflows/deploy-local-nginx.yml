@@ -68,7 +68,7 @@ jobs:
       - name: Deploy to Nginx folder
         shell: powershell
         run: |
-          $ErrorActionPreference = "Stop"
+          $ErrorActionPreference = "Stop "
 
           $source1 = "deploy_tmp\package\angular-web\browser"
           $source2 = "deploy_tmp\package\browser"
