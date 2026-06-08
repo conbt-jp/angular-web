@@ -19,6 +19,8 @@ jobs:
     env:
       PACKAGE_NAME: "@conbt-jp/angular-web"
       DEPLOY_DIR: "C:\\nginx-html"
+    env:
+      NGINX_EXE: "C:\\Users\\admin\\Downloads\\nginx-1.31.1\\nginx-1.31.1\\nginx.exe"
 
     steps:
       - name: Setup Node.js
@@ -103,5 +105,5 @@ jobs:
       - name: Reload Nginx
         shell: powershell
         run: |
-          nginx -s reload
+          & $env:NGINX_EXE -s reload
           Write-Host "Deploy completed. Open http://localhost:8080"
