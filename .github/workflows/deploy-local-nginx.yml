@@ -115,9 +115,41 @@ jobs:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
         run: |
           $payload = @{
-            text = "Deploy Angular completed. Status: ${{ job.status }}"
-          } | ConvertTo-Json
-
+            type = "message"
+            attachments = @(
+              @{
+                contentType = "application/vnd.microsoft.card.adaptive"
+                contentUrl = $null
+                content = @{
+                  '$schema' = "http://adaptivecards.io/schemas/adaptive-card.json"
+                  type = "AdaptiveCard"
+                  version = "1.4"
+                  body = @(
+                    @{
+                      type = "TextBlock"
+                      text = "Deploy Angular completed"
+                      weight = "Bolder"
+                      size = "Large"
+                    },
+                    @{
+                      type = "TextBlock"
+                      text = "Status: ${{ job.status }}"
+                    },
+                    @{
+                      type = "TextBlock"
+                      text = "Version: ${{ github.event.inputs.package-version }}"
+                    },
+                    @{
+                      type = "TextBlock"
+                      text = "Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+                      wrap = $true
+                    }
+                  )
+                }
+              }
+            )
+          } | ConvertTo-Json -Depth 20
+      
           Invoke-RestMethod `
             -Uri $env:TEAMS_WEBHOOK_URL `
             -Method Post `
