@@ -19,7 +19,6 @@ jobs:
     env:
       PACKAGE_NAME: "@conbt-jp/angular-web"
       DEPLOY_DIR: "C:\\nginx-html"
-    env:
       NGINX_EXE: "C:\\Users\\admin\\Downloads\\nginx-1.31.1\\nginx-1.31.1\\nginx.exe"
 
     steps:
