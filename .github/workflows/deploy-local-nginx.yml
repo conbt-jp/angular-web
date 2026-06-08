@@ -63,7 +63,7 @@ jobs:
           New-Item -ItemType Directory -Force -Path deploy_tmp | Out-Null
 
           Set-Location deploy_tmp
-          npm pack $target --registry=https://npm.pkg.github.com
+          npm pack $target --registry=https://npm.pkg.github.com/ --userconfig "$HOME\.npmrc"
 
       - name: Extract package
         shell: powershell
