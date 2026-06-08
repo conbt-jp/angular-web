@@ -104,5 +104,6 @@ jobs:
       - name: Reload Nginx
         shell: powershell
         run: |
-          & $env:NGINX_EXE -s reload
+          Set-Location $env:NGINX_DIR
+          .\nginx.exe -s reload
           Write-Host "Deploy completed. Open http://localhost:8080"
